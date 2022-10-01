@@ -1,0 +1,56 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+    name: Increment version
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - run: git config user.name "$GITHUB_ACTOR"
+      - run: |
+          if ${{ contains(github.event.head_commit.message, 'MAJOR') }}; then
+            npm version major
+          elif ${{ contains(github.event.head_commit.message, 'MINOR') }}; then
+            npm version minor
+          else
+            npm version patch
+          fi
+      - run: VERSION=$(node -p "require('./package.json').version")
+      - run: git tag ${VERSION}
+      - run: git push "https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --follow-tags
+      - run: git push "https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --tags
+
+  deploy-to-firebase:
+    runs-on: ubuntu-latest
+    name: Deploy to Firebase
+    needs: [increment-version]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: master
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: |
+          npm ci
+          APP_VERSION=$(node -p "require('./package.json').version")
+          REACT_APP_VERSION=$APP_VERSION npm run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRADE3WEBAPP }}'
+          channelId: live
+          projectId: trade3webapp

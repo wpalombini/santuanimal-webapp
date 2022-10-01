@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run linters
+npm run lint:check
+
+# Run formatters
+npm run format:check
+
+# Run tests
+npm run test:coverage
+
+# Run audit
+npm audit -audit-level=critical --omit=dev
