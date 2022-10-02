@@ -11,7 +11,7 @@ npm install
 ## Running the web app
 
 ```
-npm install
+npm run start:emulators
 npm start
 ```
 

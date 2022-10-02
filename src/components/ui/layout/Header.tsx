@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { getAuth } from 'firebase/auth';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,16 +10,16 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import { login, logout } from 'lib/utils';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Header = () => {
+  const [user /*, loading, error */] = useAuthState(getAuth());
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -36,6 +38,22 @@ const Header = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogin = () => {
+    login().catch(error => {
+      console.error('Error logging in:', error);
+    });
+
+    handleCloseUserMenu();
+  };
+
+  const handleLogout = () => {
+    logout().catch(error => {
+      console.error('Error logging out:', error);
+    });
+
+    handleCloseUserMenu();
   };
 
   const handleNavigateTo = (url: string) => {
@@ -139,11 +157,9 @@ const Header = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'primary.main' }}>
+              <AccountCircle />
+            </IconButton>
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
@@ -160,11 +176,16 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {!user && (
+                <MenuItem onClick={handleLogin}>
+                  <Typography textAlign="center">Login</Typography>
                 </MenuItem>
-              ))}
+              )}
+              {user && (
+                <MenuItem onClick={handleLogout}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>
