@@ -14,7 +14,7 @@ const HomePage = () => {
   return (
     <>
       <h1>Home Page</h1>
-      <button onClick={handleTest}>Test</button>
+      <button onClick={handleTest}>Test!</button>
     </>
   );
 };
