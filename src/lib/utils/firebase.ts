@@ -29,9 +29,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+
 if (!isEnvProduction()) {
   connectAuthEmulator(auth, 'http://localhost:9099');
 }
+
+export const getUserId = (): string | undefined => {
+  return auth.currentUser?.uid;
+};
+
+export const getUserTokenId = async (): Promise<string | undefined> => {
+  return await auth.currentUser?.getIdToken(false);
+};
+
+export const getUserName = (): string | null | undefined => {
+  return auth.currentUser?.displayName;
+};
 
 export const login = async (): Promise<UserCredential> => {
   const provider = new GoogleAuthProvider();

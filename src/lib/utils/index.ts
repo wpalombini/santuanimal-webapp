@@ -1,3 +1,3 @@
-import { login, logout } from './firebase';
+import { getUserId, getUserName, getUserTokenId, login, logout } from './firebase';
 
-export { login, logout };
+export { getUserId, getUserName, getUserTokenId, login, logout };
