@@ -4,7 +4,7 @@ import httpClient from 'lib/utils/axios';
 const HomePage = () => {
   const handleTest = () => {
     httpClient
-      .get('/')
+      .post('/api')
       .then(data => {
         console.log(data);
       })
