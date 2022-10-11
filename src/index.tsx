@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import reportWebVitals from './reportWebVitals';
-import AppRoutes from 'containers/routes-fix';
+import AppRoutes from 'containers/routes';
 import { setupStore } from 'store';
 
 const theme = createTheme({
