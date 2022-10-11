@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAuth } from 'firebase/auth';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,13 +16,30 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { login, logout } from 'lib/utils';
+import { getAccountDetailsAction } from 'containers/account';
+import { RootState } from 'store/reducers';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
 const Header = () => {
-  const [user /*, loading, error */] = useAuthState(getAuth());
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [user, loading, error] = useAuthState(getAuth());
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const { accountDetails } = useSelector((state: RootState) => ({
+    accountDetails: state.account,
+  }));
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!loading && !error && user) {
+      dispatch(getAccountDetailsAction());
+    }
+  }, [user]);
+
+  useEffect(() => {
+    console.log('account', accountDetails);
+  }, [accountDetails]);
 
   const navigate = useNavigate();
 
