@@ -13,3 +13,4 @@ export const isEnvProduction = () => process.env.NODE_ENV === 'production';
 
 /* BFF */
 export const getApiBaseUrl = () => process.env.REACT_APP_API_BASE_URL as string;
+export const getApiUrl = () => `${getApiBaseUrl()}/api`;

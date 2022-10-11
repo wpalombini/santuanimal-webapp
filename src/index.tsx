@@ -7,6 +7,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import reportWebVitals from './reportWebVitals';
 import AppRoutes from 'containers/routes';
 import { setupStore } from 'store';
+import { ApolloProvider } from '@apollo/client';
+import { apolloClient } from 'lib/utils';
 
 const theme = createTheme({
   components: {
@@ -35,9 +37,11 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Provider store={store}>
-        <AppRoutes />
-      </Provider>
+      <ApolloProvider client={apolloClient}>
+        <Provider store={store}>
+          <AppRoutes />
+        </Provider>
+      </ApolloProvider>
     </ThemeProvider>
   </React.StrictMode>,
 );

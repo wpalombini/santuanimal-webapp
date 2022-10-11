@@ -18,6 +18,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import { login, logout } from 'lib/utils';
 import { getAccountDetailsAction } from 'containers/account';
 import { RootState } from 'store/reducers';
+import { IAccountReducerState } from 'containers/account/interfaces';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
@@ -33,7 +34,7 @@ const Header = () => {
 
   useEffect(() => {
     if (!loading && !error && user) {
-      dispatch(getAccountDetailsAction());
+      dispatch(getAccountDetailsAction({ accountId: 'xyz' } as IAccountReducerState));
     }
   }, [user]);
 
