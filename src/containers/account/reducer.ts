@@ -1,14 +1,6 @@
 import { createReducer, PayloadAction } from '@reduxjs/toolkit';
 import { getAccountDetailsAction, getAccountDetailsFailureAction, getAccountDetailsSuccessAction } from './actions';
-
-export interface IAccountReducerState {
-  accountId?: string;
-  accountName?: string;
-  sanctuaryId?: string;
-  sanctuaryName?: string;
-  error?: string;
-  loading: boolean;
-}
+import { IAccountReducerState } from './interfaces';
 
 const initialState = {
   accountId: undefined,

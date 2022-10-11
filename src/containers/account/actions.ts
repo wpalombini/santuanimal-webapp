@@ -1,7 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 import { payloadHelper } from 'lib/utils';
 import { GET_ACCOUNT_DETAILS, GET_ACCOUNT_DETAILS_FAILURE, GET_ACCOUNT_DETAILS_SUCCESS } from './constants';
-import { IAccountReducerState } from './reducer';
+import { IAccountReducerState } from './interfaces';
 
 export const getAccountDetailsAction = createAction(GET_ACCOUNT_DETAILS);
 export const getAccountDetailsSuccessAction = createAction(
