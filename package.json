@@ -1,6 +1,6 @@
 {
   "name": "santuanimal",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.0",
