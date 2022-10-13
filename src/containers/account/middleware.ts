@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { getAccountDetailsSuccessAction } from 'containers/account';
+import { getAccountDetailsFailureAction, getAccountDetailsSuccessAction } from 'containers/account';
 import { GET_ACCOUNT_DETAILS } from './constants';
 import { getAccountDetailsApi } from './api';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -12,7 +12,7 @@ export function* getAccountDetailsSaga(action: PayloadAction<IAccountReducerStat
 
     yield put(getAccountDetailsSuccessAction(accountDetails));
   } catch (error) {
-    console.log(error);
+    yield put(getAccountDetailsFailureAction({ error: 'Error getting account details' } as IAccountReducerState));
   }
 }
 

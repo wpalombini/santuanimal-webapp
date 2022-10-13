@@ -22,7 +22,7 @@ import { IAccountReducerState } from 'containers/account/interfaces';
 import { resetAccountDetailsAction } from 'containers/account/actions';
 import Spinner from '../spinner';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = ['Products', 'Pricing'];
 
 const Header = () => {
   const [user, loading, error] = useAuthState(getAuth());
@@ -34,17 +34,20 @@ const Header = () => {
   }));
   const dispatch = useDispatch();
 
+  const hasErrors = () => !!error || !!accountDetails?.error;
   const isLoggedIn = () => !!accountDetails?.accountId;
-  const isLoading = () => loading || !!accountDetails?.loading;
+  const isLoading = () => !hasErrors() && (loading || !!accountDetails?.loading);
 
   useEffect(() => {
     if (!loading && !error && user) {
       dispatch(getAccountDetailsAction({ accountId: 'xyz' } as IAccountReducerState));
     }
+    console.log('user hasErrors', hasErrors());
   }, [user]);
 
   useEffect(() => {
     console.log('account', accountDetails);
+    console.log('accountDetails hasErrors', hasErrors());
   }, [accountDetails]);
 
   const navigate = useNavigate();
@@ -87,6 +90,7 @@ const Header = () => {
   const handleNavigateTo = (url: string) => {
     navigate(url?.toLowerCase());
     handleCloseNavMenu();
+    handleCloseUserMenu();
   };
 
   return (
@@ -211,6 +215,9 @@ const Header = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
+                  <MenuItem onClick={() => handleNavigateTo('account')}>
+                    <Typography textAlign="center">Account</Typography>
+                  </MenuItem>
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>

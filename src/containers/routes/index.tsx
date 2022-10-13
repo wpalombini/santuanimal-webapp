@@ -3,8 +3,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Layout from 'components/ui/layout/Layout';
 import LoadingPage from 'pages/loading';
+import PublicRoute from './public';
+import PrivateRoute from './private';
 
-const BlogPage = React.lazy(() => import('pages/blog'));
+const AccountPage = React.lazy(() => import('pages/account'));
 const HomePage = React.lazy(() => import('pages/home'));
 const NotFoundPage = React.lazy(() => import('pages/not-found'));
 const PricingPage = React.lazy(() => import('pages/pricing'));
@@ -19,7 +21,9 @@ const AppRoutes = () => {
             index
             element={
               <React.Suspense fallback={<LoadingPage />}>
-                <HomePage />
+                <PublicRoute>
+                  <HomePage />
+                </PublicRoute>
               </React.Suspense>
             }
           />
@@ -27,7 +31,9 @@ const AppRoutes = () => {
             path="products"
             element={
               <React.Suspense fallback={<LoadingPage />}>
-                <ProductsPage />
+                <PublicRoute>
+                  <ProductsPage />
+                </PublicRoute>
               </React.Suspense>
             }
           />
@@ -35,15 +41,19 @@ const AppRoutes = () => {
             path="pricing"
             element={
               <React.Suspense fallback={<LoadingPage />}>
-                <PricingPage />
+                <PublicRoute>
+                  <PricingPage />
+                </PublicRoute>
               </React.Suspense>
             }
           />
           <Route
-            path="blog"
+            path="account"
             element={
               <React.Suspense fallback={<LoadingPage />}>
-                <BlogPage />
+                <PrivateRoute>
+                  <AccountPage />
+                </PrivateRoute>
               </React.Suspense>
             }
           />
