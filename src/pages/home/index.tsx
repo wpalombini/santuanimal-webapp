@@ -1,22 +1,7 @@
 import React from 'react';
-import httpClient from 'lib/utils/axios';
 
 const HomePage = () => {
-  const handleTest = () => {
-    httpClient
-      .post('/api')
-      .then(data => {
-        console.log(data);
-      })
-      .catch(err => console.log(err));
-  };
-
-  return (
-    <>
-      <h1>Home Page</h1>
-      <button onClick={handleTest}>Test</button>
-    </>
-  );
+  return <h1>Home Page</h1>;
 };
 
 export default HomePage;

@@ -13,7 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import PetsIcon from '@mui/icons-material/Pets';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { login, logout } from 'lib/utils';
 import { getAccountDetailsAction } from 'containers/account';
@@ -84,7 +84,7 @@ const Header = () => {
     <AppBar position="static" sx={{ bgcolor: 'transparent', boxShadow: 'none', transition: 'none' }}>
       <Container maxWidth="md">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} color="primary" />
+          <PetsIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} color="primary" />
 
           <Typography
             variant="h6"
@@ -142,7 +142,7 @@ const Header = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} color="primary" />
+          <PetsIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} color="primary" />
           <Typography
             variant="h5"
             noWrap
