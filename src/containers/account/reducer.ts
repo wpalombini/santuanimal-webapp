@@ -1,5 +1,10 @@
 import { createReducer, PayloadAction } from '@reduxjs/toolkit';
-import { getAccountDetailsAction, getAccountDetailsFailureAction, getAccountDetailsSuccessAction } from './actions';
+import {
+  getAccountDetailsAction,
+  getAccountDetailsFailureAction,
+  getAccountDetailsSuccessAction,
+  resetAccountDetailsAction,
+} from './actions';
 import { IAccountReducerState } from './interfaces';
 
 const initialState = {
@@ -13,12 +18,9 @@ const initialState = {
 
 const accountReducer = createReducer(initialState, builder => {
   builder.addCase(getAccountDetailsAction, state => {
-    console.log('loading true');
     state.loading = true;
   });
   builder.addCase(getAccountDetailsSuccessAction, (state, action) => {
-    console.log('SUCCESS payload', action);
-
     return {
       ...state,
       accountId: action.payload.accountId,
@@ -37,6 +39,17 @@ const accountReducer = createReducer(initialState, builder => {
       sanctuaryId: undefined,
       sanctuaryName: undefined,
       error: action.payload.error,
+      loading: false,
+    };
+  });
+  builder.addCase(resetAccountDetailsAction, state => {
+    return {
+      ...state,
+      accountId: undefined,
+      accountName: undefined,
+      sanctuaryId: undefined,
+      sanctuaryName: undefined,
+      error: undefined,
       loading: false,
     };
   });

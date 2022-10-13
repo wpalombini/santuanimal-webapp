@@ -19,6 +19,8 @@ import { login, logout } from 'lib/utils';
 import { getAccountDetailsAction } from 'containers/account';
 import { RootState } from 'store/reducers';
 import { IAccountReducerState } from 'containers/account/interfaces';
+import { resetAccountDetailsAction } from 'containers/account/actions';
+import Spinner from '../spinner';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
@@ -31,6 +33,9 @@ const Header = () => {
     accountDetails: state.account,
   }));
   const dispatch = useDispatch();
+
+  const isLoggedIn = () => !!accountDetails?.accountId;
+  const isLoading = () => loading || !!accountDetails?.loading;
 
   useEffect(() => {
     if (!loading && !error && user) {
@@ -60,17 +65,21 @@ const Header = () => {
   };
 
   const handleLogin = () => {
+    if (isLoading()) return;
+
     login().catch(error => {
       console.error('Error logging in:', error);
     });
-
-    handleCloseUserMenu();
   };
 
   const handleLogout = () => {
-    logout().catch(error => {
-      console.error('Error logging out:', error);
-    });
+    logout()
+      .then(() => {
+        dispatch(resetAccountDetailsAction());
+      })
+      .catch(error => {
+        console.error('Error logging out:', error);
+      });
 
     handleCloseUserMenu();
   };
@@ -176,36 +185,38 @@ const Header = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'primary.main' }}>
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {!user && (
-                <MenuItem onClick={handleLogin}>
-                  <Typography textAlign="center">Login</Typography>
-                </MenuItem>
-              )}
-              {user && (
-                <MenuItem onClick={handleLogout}>
-                  <Typography textAlign="center">Logout</Typography>
-                </MenuItem>
-              )}
-            </Menu>
+            {!isLoggedIn() && (
+              <Button onClick={handleLogin} sx={{ my: 2, color: 'primary.main', display: 'block' }}>
+                {isLoading() ? <Spinner /> : 'Login/Signup'}
+              </Button>
+            )}
+            {isLoggedIn() && (
+              <>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'primary.main' }}>
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem onClick={handleLogout}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>
