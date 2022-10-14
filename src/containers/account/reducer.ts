@@ -3,7 +3,10 @@ import {
   getAccountDetailsAction,
   getAccountDetailsFailureAction,
   getAccountDetailsSuccessAction,
-  resetAccountDetailsAction,
+  loginAction,
+  loginFailureAction,
+  loginSuccessAction,
+  logoutAction,
 } from './actions';
 import { IAccountReducerState } from './interfaces';
 
@@ -17,6 +20,23 @@ const initialState = {
 } as IAccountReducerState;
 
 const accountReducer = createReducer(initialState, builder => {
+  builder.addCase(loginAction, state => {
+    state.loading = true;
+  });
+  builder.addCase(loginSuccessAction, state => {
+    return { ...state };
+  });
+  builder.addCase(loginFailureAction, (state, action) => {
+    return {
+      ...state,
+      accountId: undefined,
+      accountName: undefined,
+      sanctuaryId: undefined,
+      sanctuaryName: undefined,
+      error: action.payload,
+      loading: false,
+    };
+  });
   builder.addCase(getAccountDetailsAction, state => {
     state.loading = true;
   });
@@ -42,7 +62,7 @@ const accountReducer = createReducer(initialState, builder => {
       loading: false,
     };
   });
-  builder.addCase(resetAccountDetailsAction, state => {
+  builder.addCase(logoutAction, state => {
     return {
       ...state,
       accountId: undefined,

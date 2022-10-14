@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAuth } from 'firebase/auth';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,40 +13,25 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import PetsIcon from '@mui/icons-material/Pets';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { login, logout } from 'lib/utils';
-import { getAccountDetailsAction } from 'containers/account';
 import { RootState } from 'store/reducers';
-import { IAccountReducerState } from 'containers/account/interfaces';
-import { resetAccountDetailsAction } from 'containers/account/actions';
+import { loginAction, logoutAction } from 'containers/account/actions';
 import Spinner from '../spinner';
 
 const pages = ['Products', 'Pricing'];
 
 const Header = () => {
-  const [user, loading, error] = useAuthState(getAuth());
+  const dispatch = useDispatch();
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const { accountDetails } = useSelector((state: RootState) => ({
     accountDetails: state.account,
   }));
-  const dispatch = useDispatch();
 
-  const hasErrors = () => !!error || !!accountDetails?.error;
+  const hasErrors = () => !!accountDetails?.error;
   const isLoggedIn = () => !!accountDetails?.accountId;
-  const isLoading = () => !hasErrors() && (loading || !!accountDetails?.loading);
-
-  useEffect(() => {
-    if (!loading && !error && user) {
-      dispatch(getAccountDetailsAction({ accountId: 'xyz' } as IAccountReducerState));
-    }
-    console.log('user hasErrors', hasErrors());
-  }, [user]);
-
-  useEffect(() => {
-    console.log('account', accountDetails);
-    console.log('accountDetails hasErrors', hasErrors());
-  }, [accountDetails]);
+  const isLoading = () => !hasErrors() && !!accountDetails?.loading;
 
   const navigate = useNavigate();
 
@@ -70,19 +53,11 @@ const Header = () => {
   const handleLogin = () => {
     if (isLoading()) return;
 
-    login().catch(error => {
-      console.error('Error logging in:', error);
-    });
+    dispatch(loginAction());
   };
 
   const handleLogout = () => {
-    logout()
-      .then(() => {
-        dispatch(resetAccountDetailsAction());
-      })
-      .catch(error => {
-        console.error('Error logging out:', error);
-      });
+    dispatch(logoutAction());
 
     handleCloseUserMenu();
   };
@@ -191,7 +166,7 @@ const Header = () => {
           <Box sx={{ flexGrow: 0 }}>
             {!isLoggedIn() && (
               <Button onClick={handleLogin} sx={{ my: 2, color: 'primary.main', display: 'block' }}>
-                {isLoading() ? <Spinner /> : 'Login/Signup'}
+                {isLoading() ? <Spinner /> : 'Login'}
               </Button>
             )}
             {isLoggedIn() && (
@@ -215,6 +190,7 @@ const Header = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
+                  <Typography textAlign="center">{accountDetails?.sanctuaryName}</Typography>
                   <MenuItem onClick={() => handleNavigateTo('account')}>
                     <Typography textAlign="center">Account</Typography>
                   </MenuItem>

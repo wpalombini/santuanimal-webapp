@@ -5,6 +5,12 @@ import Layout from 'components/ui/layout/Layout';
 import LoadingPage from 'pages/loading';
 import PublicRoute from './public';
 import PrivateRoute from './private';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'store/reducers';
+import { appInitAction } from './actions';
+import { getAuth } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { loginSuccessAction } from 'containers/account/actions';
 
 const AccountPage = React.lazy(() => import('pages/account'));
 const HomePage = React.lazy(() => import('pages/home'));
@@ -13,6 +19,28 @@ const PricingPage = React.lazy(() => import('pages/pricing'));
 const ProductsPage = React.lazy(() => import('pages/products'));
 
 const AppRoutes = () => {
+  const [user, loading, error] = useAuthState(getAuth());
+
+  const { isAppLoaded } = useSelector((state: RootState) => ({
+    isAppLoaded: state.route.isAppLoaded,
+  }));
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (!isAppLoaded && !loading) {
+      dispatch(appInitAction());
+    }
+
+    if (isAppLoaded && user) {
+      dispatch(loginSuccessAction());
+    }
+  }, [isAppLoaded, user, loading, error]);
+
+  if (!isAppLoaded) {
+    return <LoadingPage />;
+  }
+
   return (
     <BrowserRouter>
       <Routes>
