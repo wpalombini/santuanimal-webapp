@@ -9,7 +9,6 @@ import AppRoutes from 'containers/routes';
 import { setupStore } from 'store';
 import { ApolloProvider } from '@apollo/client';
 import { apolloClient } from 'lib/utils';
-import LoadingPage from 'pages/loading';
 
 const theme = createTheme({
   components: {
@@ -40,9 +39,7 @@ root.render(
       <CssBaseline />
       <ApolloProvider client={apolloClient}>
         <Provider store={store}>
-          <React.Suspense fallback={<LoadingPage />}>
-            <AppRoutes />
-          </React.Suspense>
+          <AppRoutes />
         </Provider>
       </ApolloProvider>
     </ThemeProvider>
