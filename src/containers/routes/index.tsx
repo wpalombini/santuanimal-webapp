@@ -54,31 +54,25 @@ const AppRoutes = () => {
           <Route
             index
             element={
-              <React.Suspense fallback={<LoadingPage />}>
-                <PublicRoute>
-                  <HomePage />
-                </PublicRoute>
-              </React.Suspense>
+              <PublicRoute>
+                <HomePage />
+              </PublicRoute>
             }
           />
           <Route
             path="products"
             element={
-              <React.Suspense fallback={<LoadingPage />}>
-                <PublicRoute>
-                  <ProductsPage />
-                </PublicRoute>
-              </React.Suspense>
+              <PublicRoute>
+                <ProductsPage />
+              </PublicRoute>
             }
           />
           <Route
             path="pricing"
             element={
-              <React.Suspense fallback={<LoadingPage />}>
-                <PublicRoute>
-                  <PricingPage />
-                </PublicRoute>
-              </React.Suspense>
+              <PublicRoute>
+                <PricingPage />
+              </PublicRoute>
             }
           />
           <Route
@@ -87,22 +81,13 @@ const AppRoutes = () => {
               isLoading ? (
                 <LoadingPage />
               ) : (
-                <React.Suspense fallback={<LoadingPage />}>
-                  <PrivateRoute>
-                    <AccountPage />
-                  </PrivateRoute>
-                </React.Suspense>
+                <PrivateRoute>
+                  <AccountPage />
+                </PrivateRoute>
               )
             }
           />
-          <Route
-            path="*"
-            element={
-              <React.Suspense fallback={<LoadingPage />}>
-                <NotFoundPage />
-              </React.Suspense>
-            }
-          />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
