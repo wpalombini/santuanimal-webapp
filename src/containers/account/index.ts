@@ -1,4 +1,3 @@
-import { getAccountDetailsAction, getAccountDetailsFailureAction, getAccountDetailsSuccessAction } from './actions';
-import accountReducer from './reducer';
+import { useGetAccountDetails } from './api';
 
-export { accountReducer, getAccountDetailsAction, getAccountDetailsFailureAction, getAccountDetailsSuccessAction };
+export { useGetAccountDetails };

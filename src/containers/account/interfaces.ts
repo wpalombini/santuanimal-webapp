@@ -1,4 +1,4 @@
-export interface IAccountReducerState {
+export interface IAccountDetails {
   accountId?: string;
   accountName?: string;
   sanctuaryId?: string;

@@ -16,6 +16,7 @@ import {
   getFirebaseStorageBucket,
   isEnvProduction,
 } from 'lib/config';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const firebaseConfig = {
   apiKey: getFirebaseApiKey(),
@@ -55,3 +56,5 @@ export const login = async (): Promise<UserCredential> => {
 export const logout = async (): Promise<void> => {
   await signOut(auth);
 };
+
+export const useAuthenticationState = () => useAuthState(getAuth());

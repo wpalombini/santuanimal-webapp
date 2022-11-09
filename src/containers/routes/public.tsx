@@ -1,7 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAuthenticationState } from 'lib/utils/firebase';
 import { Navigate, useLocation } from 'react-router-dom';
-import { RootState } from 'store/reducers';
 
 interface IPublicRouteProps {
   children: JSX.Element;
@@ -10,13 +9,11 @@ interface IPublicRouteProps {
 const PublicRoute = (props: IPublicRouteProps) => {
   const location = useLocation();
 
-  const { accountDetails } = useSelector((state: RootState) => ({
-    accountDetails: state.account,
-  }));
+  const [user] = useAuthenticationState();
 
   const to = location?.state?.from?.pathname;
 
-  if (to && accountDetails?.accountId) {
+  if (to && user) {
     return <Navigate to={to} state={{ from: location }} replace />;
   }
 

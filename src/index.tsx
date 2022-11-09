@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 import reportWebVitals from './reportWebVitals';
 import AppRoutes from 'containers/routes';
-import { setupStore } from 'store';
-import { ApolloProvider } from '@apollo/client';
-import { apolloClient } from 'lib/utils';
+import { queryClient } from 'lib/utils/react-query';
+import { isEnvProduction } from 'lib/config';
 
 const theme = createTheme({
   components: {
@@ -30,18 +30,15 @@ const theme = createTheme({
   },
 });
 
-const store = setupStore();
-
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ApolloProvider client={apolloClient}>
-        <Provider store={store}>
-          <AppRoutes />
-        </Provider>
-      </ApolloProvider>
+      <QueryClientProvider client={queryClient}>
+        {!isEnvProduction() && <ReactQueryDevtools initialIsOpen={false} />}
+        <AppRoutes />
+      </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>,
 );

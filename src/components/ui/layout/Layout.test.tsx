@@ -3,18 +3,16 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import Layout from './Layout';
-import { Provider } from 'react-redux';
-import { setupStore } from 'store';
+import { QueryClientProvider } from 'react-query';
+import { queryClient } from 'lib/utils/react-query';
 
 test('renders title link', () => {
-  const store = setupStore();
-
   render(
-    <Provider store={store}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
         <Layout />
-      </BrowserRouter>
-    </Provider>,
+      </QueryClientProvider>
+    </BrowserRouter>,
   );
   const linkElements = screen.getAllByText(/^SantuAnimal$/);
   expect(linkElements).toHaveLength(2);

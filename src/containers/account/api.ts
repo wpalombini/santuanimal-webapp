@@ -1,17 +1,32 @@
-import { apolloClient } from 'lib/utils';
-import { IAccountReducerState } from './interfaces';
+import { getGraphQLClient, getUserId } from 'lib/utils';
+import { useQuery } from 'react-query';
+import { IAccountDetails } from './interfaces';
 import { GET_ACCOUNT_DETAILS_QUERY } from './queries';
 
-export const getAccountDetailsApi = async (accountId: string): Promise<IAccountReducerState> => {
-  const response = await apolloClient.query({
-    query: GET_ACCOUNT_DETAILS_QUERY,
-    variables: {
-      id: accountId,
-    },
-  });
-  if (response?.errors) {
-    throw response.errors;
-  }
+const getAccountDetailsApi = async (accountId: string): Promise<IAccountDetails> => {
+  const graphQLClient = await getGraphQLClient();
 
-  return response?.data?.getAccountDetails;
+  const variables = { id: accountId };
+  const response = await graphQLClient.request(GET_ACCOUNT_DETAILS_QUERY, variables);
+
+  console.log(response.getAccountDetails);
+
+  return response.getAccountDetails as IAccountDetails;
+};
+
+const defaultConfig = {
+  config: {
+    staleTime: Infinity,
+  },
+};
+
+export const useGetAccountDetails = ({ config } = defaultConfig) => {
+  const accountId = getUserId() as string;
+
+  return useQuery<IAccountDetails>({
+    ...config,
+    queryKey: ['accountDetails', accountId],
+    queryFn: () => getAccountDetailsApi(accountId),
+    enabled: !!accountId,
+  });
 };
