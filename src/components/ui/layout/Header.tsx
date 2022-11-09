@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,25 +12,23 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import PetsIcon from '@mui/icons-material/Pets';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { RootState } from 'store/reducers';
-import { loginAction, logoutAction } from 'containers/account/actions';
 import Spinner from '../spinner';
+import { login, logout } from 'lib/utils';
+import { useGetAccountDetails } from 'containers/account';
+import { useAuthenticationState } from 'lib/utils/firebase';
 
 const pages = ['Products', 'Pricing'];
 
 const Header = () => {
-  const dispatch = useDispatch();
-
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-  const { accountDetails } = useSelector((state: RootState) => ({
-    accountDetails: state.account,
-  }));
+  const [user, loading, error] = useAuthenticationState();
+  const accountDetails = useGetAccountDetails();
 
-  const hasErrors = () => !!accountDetails?.error;
-  const isLoggedIn = () => !!accountDetails?.accountId;
-  const isLoading = () => !hasErrors() && !!accountDetails?.loading;
+  const hasErrors = () => !!error || !!accountDetails?.error;
+  const isLoggedIn = () => !!user && !!accountDetails?.data;
+  const isLoading = () => !hasErrors() && (loading || !!accountDetails?.isLoading);
 
   const navigate = useNavigate();
 
@@ -53,11 +50,15 @@ const Header = () => {
   const handleLogin = () => {
     if (isLoading()) return;
 
-    dispatch(loginAction());
+    login().catch(err => {
+      console.error(err);
+    });
   };
 
   const handleLogout = () => {
-    dispatch(logoutAction());
+    logout().catch(err => {
+      console.error(err);
+    });
 
     handleCloseUserMenu();
   };
@@ -190,7 +191,7 @@ const Header = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <Typography textAlign="center">{accountDetails?.sanctuaryName}</Typography>
+                  <Typography textAlign="center">{accountDetails?.data?.sanctuaryName}</Typography>
                   <MenuItem onClick={() => handleNavigateTo('account')}>
                     <Typography textAlign="center">Account</Typography>
                   </MenuItem>

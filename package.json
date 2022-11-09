@@ -3,20 +3,18 @@
   "version": "0.0.28",
   "private": true,
   "dependencies": {
-    "@apollo/client": "^3.7.0",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.9.3",
-    "@reduxjs/toolkit": "^1.8.6",
     "firebase": "^9.10.0",
     "graphql": "^16.6.0",
+    "graphql-request": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.0.3",
-    "react-redux": "^8.0.4",
+    "react-query": "^3.39.2",
     "react-router-dom": "^6.3.0",
-    "redux-saga": "^1.2.1",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
