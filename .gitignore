@@ -35,3 +35,4 @@ typechain-types
 # Firebase
 firebase-debug.log
 ui-debug.log
+emulators-data

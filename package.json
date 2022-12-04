@@ -38,7 +38,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:emulators": "firebase emulators:start",
+    "start:emulators": "firebase emulators:start --import=./emulators-data --export-on-exit",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
